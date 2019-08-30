@@ -1,0 +1,59 @@
+enclave {
+    from "sgx_tstdc.edl" import *;
+	include "conf.h"
+    trusted {
+
+        /* define ECALLs here. */
+		
+		
+		/* Misc functions */
+		public void ecall_prepareMemory([user_check]ORAM_INFO* oram_info);
+		
+
+		/* General tree ORAM functions */
+
+		public void ecall_readMeta([user_check]unsigned char* meta_bucket, [user_check]unsigned char* meta_stash,[user_check]ORAM_INFO* oram_info, int recurLev);
+		public void ecall_getStash_meta([user_check]unsigned char* meta_stash, [user_check]ORAM_INFO* oram_info);
+		public void ecall_getPath_meta([user_check]unsigned char* meta_path, [user_check]ORAM_INFO* oram_info, int recurLev);
+		public void ecall_getPathID([user_check] int* output);
+		public void ecall_prepareAccess([user_check] ORAM_INFO* oram_info, int access_structure);
+
+
+
+		/* Path-ORAM functions */
+		public void ecall_readPathData_PORAM([user_check]unsigned char* blocks_in_bucket, int startBlockIdx, [user_check]unsigned char* blocks_in_stash, int startStashIdx, unsigned int data_size, [user_check] ORAM_INFO *oram_info, int recurLevel);
+		public void ecall_writePathData_PORAM([user_check]unsigned char* blocks_in_bucket, int startBlocktIdx,[user_check]unsigned char* blocks_in_stash,  int startStashIdx, unsigned int data_size, [user_check]ORAM_INFO* oram_info,  int recurLevel, TYPE_ID PathID);
+
+
+		/* CIRCUIT-ORAM functions */
+		public void ecall_readPathData_CORAM([user_check]unsigned char* blocks_in_bucket, int startBlocktIdx,  [user_check]ORAM_INFO* oram_info, int recurLevel);
+		public void ecall_readStashData_CORAM([user_check]unsigned char* blocks_in_stash, int startStashIdx, [user_check] ORAM_INFO* oram_info, int recurLevel);
+		public void ecall_prepareEviction_CORAM([user_check]unsigned char* meta_bucket, [user_check] unsigned char* meta_stash,  TYPE_ID evictPath,[user_check] ORAM_INFO* oram_info, int recurLevel);
+		public void ecall_evictCORAM([user_check]unsigned char* blocks, int startBlocktIdx, int pathLev, [user_check]ORAM_INFO* oram_info, int recurLevel);
+		
+
+
+		/* ODS functions */
+		public void ecall_getNextPathID([user_check]ORAM_INFO* oram_info,  int recurLevel, [user_check]TYPE_ID *nextPathID);
+
+
+		/* Search & update functions */
+		
+		public void ecall_setSearchKeyword([user_check] unsigned char* kw, int len,[user_check]int* kwmap_size, [user_check]unsigned char* ctr_kwmap);
+		public void ecall_setUpdateKeyword([user_check] unsigned char* kw, int kw_len, TYPE_ID fileID, [user_check] int* kwmap_size, [user_check] unsigned char* ctr_kwmap);
+		public void ecall_scanKWMap([user_check] unsigned char* input, int len);
+		
+		public void ecall_getNumFileIDs([user_check]int* numFile);
+		public void ecall_getFileIDs([user_check]unsigned char* fid_arr);
+		public void ecall_setFileIDs([user_check]unsigned char* fid_arr, int num_fileIDs);
+
+		public void ecall_scanEmptyBlock([user_check] unsigned char* empty_block_arr, long empty_block_arr_len);
+
+	};
+
+    untrusted {
+        /* define OCALLs here. */
+
+
+    };
+};
