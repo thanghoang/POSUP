@@ -13,9 +13,26 @@ Basic implementation of POSUP platform appeard in PETS'19. The full paper can be
 # Configuration
 There are three configuration files in POSUP, including ``include/conf.h``, ``POSUP/config.h`` and ``POSUP/my_config.h`` with important parameters as follows
 
-## File ```include/conf.h```
+## File ``include/conf.h``: Contain basic ORAM parameters
+
+```
+#define PATH_ORAM               -> Enable this (and disable the below) to use Path-ORAM controller
+#define CIRCUIT_ORAM            -> Enable this (and disable the above) to use Circuit-ORAM controller
 
 
+#define STASH_CACHING           -> Enable this to cache the Stash on RAM
+#define K_TOP_CACHING           -> Enable this to cache the k-top tree on RAM
+
+#if defined(K_TOP_CACHING)
+	const int CachedLevel[2] = { 3,4 };       -> Indicate the k-value to be cached of the index tree and the file tree, respectively 
+#endif
+
+#define POSITION_MAP_CACHING    -> Enable this to cache the file position map on RAM
+
+
+
+
+```
 
 
 # Build & Compile
