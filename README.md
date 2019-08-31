@@ -6,7 +6,7 @@ Basic implementation of POSUP platform appeard in PETS'19. The full paper can be
 # Prerequisites
 1. Intel SGX (Linux version [here](https://github.com/intel/linux-sgx), Windows setup [here](https://downloadcenter.intel.com/download/28972/Intel-Software-Guard-Extensions-Intel-SGX-Driver-for-Windows-))
 
-2. Intel AES-NI (Sample code was taken down from Intel website, though I provided it here in ``ext/aes-ni`` folder)
+2. Intel AES-NI (Sample code was taken down from Intel website, though it can be found on ``ext/aes-ni`` folder)
 
 3. Libtomcrypt (download [here](https://github.com/libtom/libtomcrypt))
 
