@@ -38,16 +38,7 @@ typedef struct type_pos_map
 #endif
 
 
-#if defined(PATH_ORAM)
-	#define BUCKET_SIZE 4 
-#elif defined (CIRCUIT_ORAM)
-	#if defined(DETERMINISTIC_EVICTION)
-		#define BUCKET_SIZE 2 
-	#else
-		#define BUCKET_SIZE 3
-	#endif
-#endif
-		
+
 
 #define STASH_SIZE 40
 
@@ -71,6 +62,17 @@ const sgx_aes_ctr_128bit_key_t master_key[16] = { 0x01, 0x01, 0x01, 0x01, 0x01, 
 
 /***** DO NOT CHANGE ANYTHING BELOW!!!!! *****/
 
+#if defined(PATH_ORAM)
+	#define BUCKET_SIZE 4 
+#elif defined (CIRCUIT_ORAM)
+	#if defined(DETERMINISTIC_EVICTION)
+		#define BUCKET_SIZE 2 
+	#else
+		#define BUCKET_SIZE 3
+	#endif
+#endif
+		
+		
 #define KWMAP_VALUE_SIZE 32
 
 #define ENCRYPT_BLOCK_SIZE 16	//in bytes
