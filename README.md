@@ -81,9 +81,28 @@ Download the code and execute ``make`` in the project root folder, which will pr
 Run the program and it will display the menu showing the main functionalities of POSUP, including setup, search, update. Follow the instruction in the menu and enjoy! ;)
 
 
-## Important Note:
-The implementation is just for the proof of concept. There are several places in the code that was implemented INSECURELY for the sake of code readibility and understanding. We are not responsible for any damages if the code is used for commercial products.
+## Important Note 
+The implementation is just for the proof of concept. There are several places in the code that were implemented INSECURELY for the sake of code readibility and understanding. We are not responsible for any damages if the code is used for commercial purposes.
 
+## Citing
+
+If the code is found useful, we would be appreciated if our paper can be cited as follows.
+
+Hoang, Thang, Muslum Ozgur Ozmen, Yeongjin Jang, and Attila A. Yavuz. "Hardware-Supported ORAM in Effect: Practical Oblivious Search and Update on Very Large Dataset." Proceedings on Privacy Enhancing Technologies 2019, no. 1 (2019): 172-191.
+
+### Bibtex format
+```
+@article{hoang2019hardware,
+  title={Hardware-Supported ORAM in Effect: Practical Oblivious Search and Update on Very Large Dataset},
+  author={Hoang, Thang and Ozmen, Muslum Ozgur and Jang, Yeongjin and Yavuz, Attila A},
+  journal={Proceedings on Privacy Enhancing Technologies},
+  volume={2019},
+  number={1},
+  pages={172--191},
+  year={2019},
+  publisher={Sciendo}
+}
+```
 
 # Further Information
 For any inquiries, bugs, and assistance on building and running the code, please contact Thang Hoang (hoangm@mail.usf.edu).
