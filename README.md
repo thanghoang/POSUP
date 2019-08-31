@@ -8,7 +8,7 @@ Basic implementation of POSUP platform appeard in PETS'19. The full paper can be
 
 2. Intel AES-NI (Sample code was taken down from Intel website, though I provided it here in ``ext/aes-ni`` folder)
 
-3. Libtomcrypt (download [here](https://github.com/libtom/libtomcrypt)
+3. Libtomcrypt (download [here](https://github.com/libtom/libtomcrypt))
 
 # Configuration
 There are TWO main configuration files in POSUP, including ``include/conf.h`` and ``POSUP/my_config.h`` with important parameters as follows:
