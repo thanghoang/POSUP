@@ -44,7 +44,7 @@ There are TWO main configuration files in POSUP, including ``include/conf.h`` an
 #define NUMBLOCK_STASH_LOAD 40		-> Declare number of blocks in the stash to be processed by SGX each time
 
 #define NUM_EMPTY_BLOCK_LOAD 		-> Declare number of blocks in the empty block array to be processed by SGX each time
-#define NUM_KWMAP_ENTRIES_LOAD 20	-> -> Declare number of entries in the keyword map to be processed by SGX each time
+#define NUM_KWMAP_ENTRIES_LOAD 20	->  Declare number of entries in the keyword map to be processed by SGX each time
 
 ```
 
