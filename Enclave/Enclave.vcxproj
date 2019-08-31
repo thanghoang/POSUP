@@ -332,6 +332,7 @@
     <ClInclude Include="BlockSGX.h" />
     <ClInclude Include="Enclave.h" />
     <ClInclude Include="Enclave_t.h" />
+    <ClInclude Include="oblivious-primitives.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Enclave.edl">

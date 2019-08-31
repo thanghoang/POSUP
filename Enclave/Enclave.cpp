@@ -13,7 +13,9 @@ a deprecated function from wchar.h
 #include "Enclave.h"
 #include <cstring>
 
-#include <intrin.h>
+#ifdef _MSC_VER
+	#include <intrin.h>
+#endif
 
 #include "iaesni.h"
 #include <set>
@@ -1567,11 +1569,17 @@ void ecall_scanKWMap( unsigned char* input, int len)
 		// latter 32 bytes are the encrypted blockID, pathID, and number of fileIDs in the first block of keyword
 		sgx_aes_ctr_encrypt(master_key, &input[i+16], 32, ctr_decrypt, 128, buffer);
 
-		o_memcpy_8(v, &blockID, buffer, 8);
-		o_memcpy_8(v, &pathID, &buffer[8], 8);
+		o_memcpy_8(v, &blockID, buffer, sizeof(blockID));
+		o_memcpy_8(v, &pathID, &buffer[8], sizeof(pathID));
 		o_memcpy_8(v, &buffer[8], &randPath, sizeof(randPath));
-		o_memcpy_8(v, &numFileIDs, &buffer[16], 8);
-		
+		o_memcpy_8(v, &numFileIDs, &buffer[16], sizeof(numFileIDs));
+		if (v)
+		{
+			ocall_print_value(blockID);
+			ocall_print_value(pathID);
+			ocall_print_value(numFileIDs);
+
+		}
 		//if (matched == 1)
 		//{
 			//memcpy(&blockID, buffer, 8);

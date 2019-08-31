@@ -116,3 +116,24 @@ void printMenu()
 	cout << "4. Save current state and Exit" << endl << endl;;
 	cout << "---------------" << endl;
 }
+
+
+
+/* OCall functions */
+void ocall_print_string(const char *str, int len)
+{
+	/* Proxy/Bridge will check the length and null-terminate
+	 * the input string to prevent buffer overflow.
+	 */
+	printf("%s\n", str);
+}
+
+
+void ocall_print_value(long long val)
+{
+	/* Proxy/Bridge will check the length and null-terminate
+	 * the input string to prevent buffer overflow.
+	 */
+	cout << val << endl;
+}
+

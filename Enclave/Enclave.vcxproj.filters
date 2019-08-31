@@ -41,6 +41,9 @@
     <ClInclude Include="Enclave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="oblivious-primitives.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Enclave_private.pem">

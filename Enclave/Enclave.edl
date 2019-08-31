@@ -53,7 +53,8 @@ enclave {
 
     untrusted {
         /* define OCALLs here. */
-
+		void ocall_print_string([in, string] const char *str, int len);
+		void ocall_print_value(long long val);
 
     };
 };

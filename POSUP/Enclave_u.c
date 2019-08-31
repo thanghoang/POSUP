@@ -127,6 +127,15 @@ typedef struct ms_ecall_scanEmptyBlock_t {
 	long int ms_empty_block_arr_len;
 } ms_ecall_scanEmptyBlock_t;
 
+typedef struct ms_ocall_print_string_t {
+	const char* ms_str;
+	int ms_len;
+} ms_ocall_print_string_t;
+
+typedef struct ms_ocall_print_value_t {
+	long long ms_val;
+} ms_ocall_print_value_t;
+
 typedef struct ms_sgx_oc_cpuidex_t {
 	int* ms_cpuinfo;
 	int ms_leaf;
@@ -154,6 +163,22 @@ typedef struct ms_sgx_thread_set_multiple_untrusted_events_ocall_t {
 	const void** ms_waiters;
 	size_t ms_total;
 } ms_sgx_thread_set_multiple_untrusted_events_ocall_t;
+
+static sgx_status_t SGX_CDECL Enclave_ocall_print_string(void* pms)
+{
+	ms_ocall_print_string_t* ms = SGX_CAST(ms_ocall_print_string_t*, pms);
+	ocall_print_string(ms->ms_str, ms->ms_len);
+
+	return SGX_SUCCESS;
+}
+
+static sgx_status_t SGX_CDECL Enclave_ocall_print_value(void* pms)
+{
+	ms_ocall_print_value_t* ms = SGX_CAST(ms_ocall_print_value_t*, pms);
+	ocall_print_value(ms->ms_val);
+
+	return SGX_SUCCESS;
+}
 
 static sgx_status_t SGX_CDECL Enclave_sgx_oc_cpuidex(void* pms)
 {
@@ -197,10 +222,12 @@ static sgx_status_t SGX_CDECL Enclave_sgx_thread_set_multiple_untrusted_events_o
 
 static const struct {
 	size_t nr_ocall;
-	void * func_addr[5];
+	void * func_addr[7];
 } ocall_table_Enclave = {
-	5,
+	7,
 	{
+		(void*)(uintptr_t)Enclave_ocall_print_string,
+		(void*)(uintptr_t)Enclave_ocall_print_value,
 		(void*)(uintptr_t)Enclave_sgx_oc_cpuidex,
 		(void*)(uintptr_t)Enclave_sgx_thread_wait_untrusted_event_ocall,
 		(void*)(uintptr_t)Enclave_sgx_thread_set_untrusted_event_ocall,
