@@ -113,19 +113,18 @@ TYPE_ID RandBound(TYPE_ID n);
 
 int isEqual(unsigned char* arr1, unsigned char* arr2, int len);
 
-char ocmp_eq(long long s1, long long s2);
-char ocmp_ne(long long s1, long long s2);
+//char ocmp_eq(long long s1, long long s2);
+//char ocmp_ne(long long s1, long long s2);
 
-char ocmp_g(long long s1, long long s2);
-char ocmp_ge(long long s1, long long s2);
+//char ocmp_g(long long s1, long long s2);
+//char ocmp_ge(long long s1, long long s2);
 
 void o_clearBlock(uint64_t is_valid_clear, BlockSGX *b);
 void o_copyBlock(uint64_t is_valid_clear, BlockSGX *dest, BlockSGX* src);
 
 
-size_t o_memcpy_8(uint64_t is_valid_copy, void *dst, void *src, size_t size);
-size_t o_memcpy_byte(uint64_t is_valid_copy, void *dst, void *src, size_t size);
-size_t o_memset_8(uint64_t is_valid_set, void *dst, char val, size_t size);
+//size_t o_memcpy(uint64_t is_valid_copy, void *dst, void *src, size_t size);
+//size_t o_memset(uint64_t is_valid_set, void *dst, char val, size_t size);
 
 void deserializeBlocks(unsigned char* input, int numBlock, int data_size, BlockSGX** blocks, int recurLevel, bool isStashBlock, int startIdx, bool isReversed);
 void serializeBlocks(unsigned char* output, int numBlock, int data_size, BlockSGX** blocks, int recurLevel, bool isStashBlock, int blockIdx, bool isReversed);
@@ -161,7 +160,7 @@ void ecall_prepareMemory(ORAM_INFO* oram_info);
 void ecall_readMeta(unsigned char* serializedMeta_path, unsigned char* serializedMeta_stash, ORAM_INFO* oram_info, int recurLev);
 void ecall_getStash_meta(unsigned char* serializedMeta_stash, ORAM_INFO* oram_info);
 void ecall_getPath_meta(unsigned char* serializedMeta_path, ORAM_INFO* oram_info, int recurLev);
-void ecall_getPathID(int* output);
+void ecall_getPathID(TYPE_ID* output);
 void ecall_prepareAccess(ORAM_INFO* oram_info, int access_structure);
 
 

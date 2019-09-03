@@ -24,7 +24,7 @@ typedef struct ms_ecall_getPath_meta_t {
 } ms_ecall_getPath_meta_t;
 
 typedef struct ms_ecall_getPathID_t {
-	int* ms_output;
+	TYPE_ID* ms_output;
 } ms_ecall_getPathID_t;
 
 typedef struct ms_ecall_prepareAccess_t {
@@ -92,7 +92,7 @@ typedef struct ms_ecall_getNextPathID_t {
 typedef struct ms_ecall_setSearchKeyword_t {
 	unsigned char* ms_kw;
 	int ms_len;
-	int* ms_kwmap_size;
+	int ms_kwmap_size;
 	unsigned char* ms_ctr_kwmap;
 } ms_ecall_setSearchKeyword_t;
 
@@ -100,7 +100,7 @@ typedef struct ms_ecall_setUpdateKeyword_t {
 	unsigned char* ms_kw;
 	int ms_kw_len;
 	TYPE_ID ms_fileID;
-	int* ms_kwmap_size;
+	int ms_kwmap_size;
 	unsigned char* ms_ctr_kwmap;
 } ms_ecall_setUpdateKeyword_t;
 
@@ -278,7 +278,7 @@ sgx_status_t ecall_getPath_meta(sgx_enclave_id_t eid, unsigned char* meta_path, 
 	return status;
 }
 
-sgx_status_t ecall_getPathID(sgx_enclave_id_t eid, int* output)
+sgx_status_t ecall_getPathID(sgx_enclave_id_t eid, TYPE_ID* output)
 {
 	sgx_status_t status;
 	ms_ecall_getPathID_t ms;
@@ -389,7 +389,7 @@ sgx_status_t ecall_getNextPathID(sgx_enclave_id_t eid, ORAM_INFO* oram_info, int
 	return status;
 }
 
-sgx_status_t ecall_setSearchKeyword(sgx_enclave_id_t eid, unsigned char* kw, int len, int* kwmap_size, unsigned char* ctr_kwmap)
+sgx_status_t ecall_setSearchKeyword(sgx_enclave_id_t eid, unsigned char* kw, int len, int kwmap_size, unsigned char* ctr_kwmap)
 {
 	sgx_status_t status;
 	ms_ecall_setSearchKeyword_t ms;
@@ -401,7 +401,7 @@ sgx_status_t ecall_setSearchKeyword(sgx_enclave_id_t eid, unsigned char* kw, int
 	return status;
 }
 
-sgx_status_t ecall_setUpdateKeyword(sgx_enclave_id_t eid, unsigned char* kw, int kw_len, TYPE_ID fileID, int* kwmap_size, unsigned char* ctr_kwmap)
+sgx_status_t ecall_setUpdateKeyword(sgx_enclave_id_t eid, unsigned char* kw, int kw_len, TYPE_ID fileID, int kwmap_size, unsigned char* ctr_kwmap)
 {
 	sgx_status_t status;
 	ms_ecall_setUpdateKeyword_t ms;

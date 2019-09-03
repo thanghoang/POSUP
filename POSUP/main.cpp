@@ -125,7 +125,27 @@ void ocall_print_string(const char *str, int len)
 	/* Proxy/Bridge will check the length and null-terminate
 	 * the input string to prevent buffer overflow.
 	 */
-	printf("%s\n", str);
+	//printf("%s\n", str);
+	int indx;
+	if (str != NULL && len > 0)
+	{
+		cout << "0x";
+		for (indx = 0; indx < len; indx++)
+		{
+			if ((indx % 72 == 0) && (indx != 0))
+			{
+				cout << "\n";
+			}
+			printf("%.2x", str[indx]);
+		}
+		printf("\n");
+	}
+	else
+	{
+		cout << "Input string is NULL" << endl;
+	}
+
+
 }
 
 

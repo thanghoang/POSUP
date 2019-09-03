@@ -453,7 +453,7 @@ void inc_dec_ctr(unsigned char* input, unsigned long long number, bool isInc)
 	{
 		tmp[i] = input[15 - i];
 	}
-	unsigned long long* ctr = (unsigned long long*)&tmp;
+	uint64_t* ctr = (uint64_t*)&tmp;
 
 	if (isInc)
 	{

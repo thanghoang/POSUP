@@ -15,7 +15,7 @@ enclave {
 		public void ecall_readMeta([user_check]unsigned char* meta_bucket, [user_check]unsigned char* meta_stash,[user_check]ORAM_INFO* oram_info, int recurLev);
 		public void ecall_getStash_meta([user_check]unsigned char* meta_stash, [user_check]ORAM_INFO* oram_info);
 		public void ecall_getPath_meta([user_check]unsigned char* meta_path, [user_check]ORAM_INFO* oram_info, int recurLev);
-		public void ecall_getPathID([user_check] int* output);
+		public void ecall_getPathID([user_check] TYPE_ID* output);
 		public void ecall_prepareAccess([user_check] ORAM_INFO* oram_info, int access_structure);
 
 
@@ -39,8 +39,8 @@ enclave {
 
 		/* Search & update functions */
 		
-		public void ecall_setSearchKeyword([user_check] unsigned char* kw, int len,[user_check]int* kwmap_size, [user_check]unsigned char* ctr_kwmap);
-		public void ecall_setUpdateKeyword([user_check] unsigned char* kw, int kw_len, TYPE_ID fileID, [user_check] int* kwmap_size, [user_check] unsigned char* ctr_kwmap);
+		public void ecall_setSearchKeyword([user_check] unsigned char* kw, int len, int kwmap_size, [user_check]unsigned char* ctr_kwmap);
+		public void ecall_setUpdateKeyword([user_check] unsigned char* kw, int kw_len, TYPE_ID fileID, int kwmap_size, [user_check] unsigned char* ctr_kwmap);
 		public void ecall_scanKWMap([user_check] unsigned char* input, int len);
 		
 		public void ecall_getNumFileIDs([user_check]int* numFile);

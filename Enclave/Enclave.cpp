@@ -20,6 +20,7 @@ a deprecated function from wchar.h
 #include "iaesni.h"
 #include <set>
 
+#include "oblivious-primitives.h"
 
 
 
@@ -52,7 +53,7 @@ int isEqual(unsigned char* arr1, unsigned char* arr2, int len)
 	return 1;
 }
 
-char ocmp_eq(long long s1, long long s2)
+/*char ocmp_eq(long long s1, long long s2)
 {
 	if (s1 == s2)
 		return 1;
@@ -77,22 +78,22 @@ char ocmp_ge(long long s1, long long s2)
 	if (s1 >= s2)
 		return 1;
 	return 0;
-}
+}*/
 
 void o_clearBlock(uint64_t is_valid_clear, BlockSGX *b)
 {
 	TYPE_ID tmp1 = b->getID();
-	o_memcpy_8(is_valid_clear, &tmp1, &_ZERO, sizeof(_ZERO));
+	o_memcpy(is_valid_clear, &tmp1, &_ZERO, sizeof(_ZERO));
 	b->setID(tmp1);
 
-	o_memset_8(is_valid_clear, b->getDATA(), 0, b->getData_size());
+	o_memset_byte(is_valid_clear, b->getDATA(), 0, b->getData_size());
 	
 	TYPE_ID tmp3 = b->getNextID();
-	o_memcpy_8(is_valid_clear, &tmp3, &_ZERO, sizeof(_ZERO));
+	o_memcpy(is_valid_clear, &tmp3, &_ZERO, sizeof(_ZERO));
 	b->setNextID(tmp3);
 
 	TYPE_ID tmp4 = b->getNextPathID();
-	o_memcpy_8(is_valid_clear, &tmp4, &_MINUS_ONE, sizeof(_MINUS_ONE));
+	o_memcpy(is_valid_clear, &tmp4, &_MINUS_ONE, sizeof(_MINUS_ONE));
 	b->setNextPathID(tmp4);
 }
 
@@ -109,37 +110,30 @@ void o_copyBlock(uint64_t is_valid_clear, BlockSGX *dest, BlockSGX* src)
 	dest_nextID = dest->getNextID();
 	dest_nextPathID = dest->getNextPathID();
 
-	o_memcpy_8(is_valid_clear, &dest_ID, &src_ID, sizeof(TYPE_ID));
-	o_memcpy_8(is_valid_clear, &dest_nextID, &src_nextID, sizeof(TYPE_ID));
-	o_memcpy_8(is_valid_clear, &dest_nextPathID, &src_nextPathID, sizeof(TYPE_ID));
+	o_memcpy(is_valid_clear, &dest_ID, &src_ID, sizeof(TYPE_ID));
+	o_memcpy(is_valid_clear, &dest_nextID, &src_nextID, sizeof(TYPE_ID));
+	o_memcpy(is_valid_clear, &dest_nextPathID, &src_nextPathID, sizeof(TYPE_ID));
 
-	o_memcpy_8(is_valid_clear, dest->getDATA(), src->getDATA(), src->getData_size());
+	o_memcpy(is_valid_clear, dest->getDATA(), src->getDATA(), src->getData_size());
 
 	dest->setID(dest_ID);
 	dest->setNextID(dest_nextID);
 	dest->setNextPathID(dest_nextPathID);
 }
-
-size_t o_memcpy_8(uint64_t is_valid_copy, void *dst, void *src, size_t size)
+/*
+size_t o_memcpy(uint64_t is_valid_copy, void *dst, void *src, size_t size)
 {
 	if (is_valid_copy)
 		memcpy(dst, src, size);
 	return size;
 }
 
-size_t o_memcpy_byte(uint64_t is_valid_copy, void *dst, void *src, size_t size)
-{
-	if (is_valid_copy)
-		memcpy(dst, src, 1);
-	return size;
-}
-
-size_t o_memset_8(uint64_t is_valid_set, void *dst, char val, size_t size)
+size_t o_memset(uint64_t is_valid_set, void *dst, char val, size_t size)
 {
 	if (is_valid_set)
 		memset(dst, val, size);
 	return size;
-}
+}*/
 
 /**
  * Function Name: inc_dec_ctr
@@ -163,7 +157,7 @@ void inc_dec_ctr(unsigned char* input, unsigned long long number, bool isInc)
 	{
 		tmp[i] = input[15 - i];
 	}
-	unsigned long long* ctr = (unsigned long long*)&tmp;
+	uint64_t* ctr = (uint64_t*)&tmp;
 
 	if (isInc)
 	{
@@ -421,7 +415,7 @@ void updateBlock(int recurLevel, ORAM_INFO *oram_info)
 			newPathID = -1;
 			char v = ocmp_ne(read_block[recurLevel]->getNextPathID(), -1);
 			TYPE_ID tmp = RandBound(oram_info[recurLevel].NUM_LEAVES) + (oram_info[recurLevel].NUM_LEAVES - 1);
-			o_memcpy_8(v, &newPathID, &tmp, sizeof(TYPE_ID));
+			o_memcpy(v, &newPathID, &tmp, sizeof(TYPE_ID));
 			//if (read_block[recurLevel]->getNextPathID() != -1)
 			//	newPathID = RandBound(oram_info[recurLevel].NUM_LEAVES) + (oram_info[recurLevel].NUM_LEAVES - 1);
 			//else
@@ -442,7 +436,7 @@ void updateBlock(int recurLevel, ORAM_INFO *oram_info)
 					
 					char v3 = ocmp_eq(fileID, 0);
 					char v4 = ocmp_eq(v2, 0);
-					o_memcpy_8(v3&v4 , &write_block[recurLevel]->getDATA()[i * sizeof(TYPE_ID)], &update_fileID, sizeof(TYPE_ID));
+					o_memcpy(v3&v4 , &write_block[recurLevel]->getDATA()[i * sizeof(TYPE_ID)], &update_fileID, sizeof(TYPE_ID));
 					v2 |= v3;
 
 					//if (fileID == 0)
@@ -454,14 +448,14 @@ void updateBlock(int recurLevel, ORAM_INFO *oram_info)
 				TYPE_ID tmp1 = write_block[recurLevel]->getNextID();
 				TYPE_ID tmp2 = write_block[recurLevel]->getNextPathID();
 
-				o_memcpy_8(useEmptyBlock, &tmp1, &blockID_2, sizeof(TYPE_ID));
-				o_memcpy_8(useEmptyBlock, &tmp2, &pathID_2, sizeof(TYPE_ID));
+				o_memcpy(useEmptyBlock, &tmp1, &blockID_2, sizeof(TYPE_ID));
+				o_memcpy(useEmptyBlock, &tmp2, &pathID_2, sizeof(TYPE_ID));
 				write_block[recurLevel]->setNextID(tmp1);
 				write_block[recurLevel]->setNextPathID(tmp2);
 				TYPE_ID tmp3 = -1;
 				TYPE_ID tmp4 = 0;
-				o_memcpy_8(useEmptyBlock, &nextPathID, &tmp3, sizeof(TYPE_ID));
-				o_memcpy_8(useEmptyBlock, &nextBlockID, &tmp4, sizeof(TYPE_ID));
+				o_memcpy(useEmptyBlock, &nextPathID, &tmp3, sizeof(TYPE_ID));
+				o_memcpy(useEmptyBlock, &nextBlockID, &tmp4, sizeof(TYPE_ID));
 				//if (useEmptyBlock) //need oblivious
 				//{
 				//	write_block[recurLevel]->setNextID(blockID_2);
@@ -505,7 +499,7 @@ int getDeepestLevel(TYPE_ID PathID, TYPE_ID blockPathID, ORAM_INFO* oram_info, i
 		char v = ocmp_eq(full_path_idx_of_block[j], full_path_idx[j]);
 		char v2 = ocmp_eq(ret, -1);
 		v = v & v2;
-		o_memcpy_8(v, &ret, &j, sizeof(int));
+		o_memcpy(v, &ret, &j, sizeof(int));
 		//if (full_path_idx_of_block[j] == full_path_idx[j])
 		//{
 		//	return j;
@@ -539,8 +533,8 @@ void getDeepestBucketIdx(TYPE_ID* meta_path, TYPE_ID evictPathID, int* output, O
 		int k = getDeepestLevel(evictPathID, meta_stash[i], oram_info, recurLevel);
 		char v2 = ocmp_ge(k, deepest);
 		char v3 = v & v2;
-		o_memcpy_8(v3, &deepest, &k, sizeof(int));
-		o_memcpy_8(v3, &output[0], &i, sizeof(int));
+		o_memcpy(v3, &deepest, &k, sizeof(int));
+		o_memcpy(v3, &output[0], &i, sizeof(int));
 		//if (meta_stash[i] != -1) //NEED OBLIVIOUS
 		//{
 		//	int k = getDeepestLevel(evictPathID, meta_stash[i], oram_info, recurLevel);
@@ -557,7 +551,7 @@ void getDeepestBucketIdx(TYPE_ID* meta_path, TYPE_ID evictPathID, int* output, O
 		
 		int tmp = 0;
 		char v = ocmp_eq(deepest, -1);
-		o_memcpy_8(v, &output[i+1], &tmp, sizeof(int));
+		o_memcpy(v, &output[i+1], &tmp, sizeof(int));
 
 		//if (deepest != -1)	
 		//	output[i + 1] = 0;
@@ -566,8 +560,8 @@ void getDeepestBucketIdx(TYPE_ID* meta_path, TYPE_ID evictPathID, int* output, O
 			int k = getDeepestLevel(evictPathID, meta_path[i*BUCKET_SIZE + j], oram_info, recurLevel);
 			
 			char v = ocmp_g(k, deepest);
-			o_memcpy_8(v, &deepest, &k, sizeof(int));
-			o_memcpy_8(v, &output[i+1], &j, sizeof(int));
+			o_memcpy(v, &deepest, &k, sizeof(int));
+			o_memcpy(v, &output[i+1], &j, sizeof(int));
 			//if (k > deepest)
 			//{
 			//	deepest = k;
@@ -604,9 +598,9 @@ int PrepareDeepest(TYPE_ID* meta_path, TYPE_ID PathID, int* deepest, ORAM_INFO* 
 	//if the stash is not empty
 	char v = ocmp_ne(deeperBlockIdx[0], -1);
 	int tmp = -1;
-	o_memcpy_8(v, &src, &tmp, sizeof(int));
+	o_memcpy(v, &src, &tmp, sizeof(int));
 	int tmp2 = getDeepestLevel(PathID, meta_stash[deeperBlockIdx[0]], oram_info, recurLevel);
-	o_memcpy_8(v, &goal, &tmp2, sizeof(int));
+	o_memcpy(v, &goal, &tmp2, sizeof(int));
 	//if (deeperBlockIdx[0] != -1)
 	//{
 	//	src = -1;
@@ -616,7 +610,7 @@ int PrepareDeepest(TYPE_ID* meta_path, TYPE_ID PathID, int* deepest, ORAM_INFO* 
 	for (int i = 0; i < oram_info[recurLevel].HEIGHT + 1; i++)
 	{
 		char v = ocmp_ge(goal, i);
-		o_memcpy_8(v, &deepest[i], &src, sizeof(int));
+		o_memcpy(v, &deepest[i], &src, sizeof(int));
 		//if (goal >= i)
 		//{
 		//	deepest[i] = src;
@@ -626,13 +620,13 @@ int PrepareDeepest(TYPE_ID* meta_path, TYPE_ID PathID, int* deepest, ORAM_INFO* 
 
 		v = ocmp_ne(deeperBlockIdx[i + 1], -1);
 		int tmp = getDeepestLevel(PathID, meta_path[i*BUCKET_SIZE + deeperBlockIdx[i + 1]], oram_info, recurLevel);
-		o_memcpy_8(v, &l, &tmp, sizeof(int));
+		o_memcpy(v, &l, &tmp, sizeof(int));
 		//if (deeperBlockIdx[i + 1] != -1)
 		//	l = getDeepestLevel(PathID, meta_path[i*BUCKET_SIZE + deeperBlockIdx[i + 1]], oram_info, recurLevel);
 
 		v = ocmp_g(l, goal);
-		o_memcpy_8(v, &goal, &l, sizeof(int));
-		o_memcpy_8(v, &src, &i, sizeof(int));
+		o_memcpy(v, &goal, &l, sizeof(int));
+		o_memcpy(v, &src, &i, sizeof(int));
 		//if (l > goal)
 		//{
 		//	goal = l;
@@ -646,7 +640,7 @@ int PrepareDeepest(TYPE_ID* meta_path, TYPE_ID PathID, int* deepest, ORAM_INFO* 
 
 		v = ocmp_ne(deepest[i + 1], -2);
 		tmp = deepest[i + 1] + 1;
-		o_memcpy_8(v, &deepest[i + 1], &tmp, sizeof(int));
+		o_memcpy(v, &deepest[i + 1], &tmp, sizeof(int));
 		//if (deepest[i + 1] != -2)
 		//	deepest[i + 1] += 1;
 	}
@@ -671,7 +665,7 @@ int getEmptySlot(TYPE_ID* meta_path, int level)
 	{
 		char v = ocmp_eq(meta_path[i], -1);
 		int tmp = i % BUCKET_SIZE;
-		o_memcpy_8(v, &res, &tmp, sizeof(int));
+		o_memcpy(v, &res, &tmp, sizeof(int));
 		//if (meta_path[i] == -1) 
 		//	res = i % BUCKET_SIZE;
 	}
@@ -704,9 +698,9 @@ int prepareTarget(TYPE_ID* meta_path, TYPE_ID pathID, int *deepest, int* target,
 	{
 		char v = ocmp_eq(i, src);
 		int tmp = -2;
-		o_memcpy_8(v, &target[i], &dest, sizeof(int));
-		o_memcpy_8(v, &dest, &tmp, sizeof(int));
-		o_memcpy_8(v, &src, &tmp, sizeof(int));
+		o_memcpy(v, &target[i], &dest, sizeof(int));
+		o_memcpy(v, &dest, &tmp, sizeof(int));
+		o_memcpy(v, &src, &tmp, sizeof(int));
 		//if (i == src)
 		//{
 		//	target[i] = dest;
@@ -724,8 +718,8 @@ int prepareTarget(TYPE_ID* meta_path, TYPE_ID pathID, int *deepest, int* target,
 		char v5 = ocmp_ne(deepest[i], -2);
 		v2 &= v5;
 		v2 &= v;
-		o_memcpy_8(v2, &src, &deepest[i], sizeof(int));
-		o_memcpy_8(v2, &dest, &i, sizeof(int));
+		o_memcpy(v2, &src, &deepest[i], sizeof(int));
+		o_memcpy(v2, &dest, &i, sizeof(int));
 		//if (i >= 0)
 		//{
 		//	if (((dest == -2 && getEmptySlot(meta_path, i - 1) != -1) || target[i] != -2) && deepest[i] != -2)
@@ -738,7 +732,7 @@ int prepareTarget(TYPE_ID* meta_path, TYPE_ID pathID, int *deepest, int* target,
 	
 	//Stash case:
 	char v = ocmp_eq(src, 0);
-	o_memcpy_8(v, &target[0], &dest, sizeof(int));
+	o_memcpy(v, &target[0], &dest, sizeof(int));
 	//if (src == 0)
 	//{
 	//	target[0] = dest;
@@ -932,7 +926,7 @@ void ecall_getPath_meta(unsigned char* serializedMeta_path, ORAM_INFO* oram_info
 
 }
 
-void ecall_getPathID(int* output)
+void ecall_getPathID(TYPE_ID* output)
 {
 	*output = pathID;
 }
@@ -1054,12 +1048,12 @@ void ecall_readPathData_PORAM(unsigned char* serializedBlocks_in_bucket, int sta
 				////call this function to update the block
 				if (recurLev > 0)
 				{
-					o_memcpy_8(v&t, &meta_path[j + start_block_idx], &new_path_id[recurLev],sizeof(TYPE_ID));
+					o_memcpy(v&t, &meta_path[j + start_block_idx], &new_path_id[recurLev],sizeof(TYPE_ID));
 					//meta_path[j + start_block_idx] = new_path_id[recurLev];
 				}
 				else
 				{
-					o_memcpy_8(v&t, &meta_path[j + start_block_idx], &prevGen_newPathID, sizeof(TYPE_ID));
+					o_memcpy(v&t, &meta_path[j + start_block_idx], &prevGen_newPathID, sizeof(TYPE_ID));
 					//meta_path[j + start_block_idx] = prevGen_newPathID;
 				}
 				if (v == 1 &&  t ==1)  // This update should be oblivious (i.e., we should perform update after scanning both path & stash). However, for the code readability, we will keep it *insecure* like this
@@ -1078,7 +1072,7 @@ void ecall_readPathData_PORAM(unsigned char* serializedBlocks_in_bucket, int sta
 				char v2 = ocmp_eq(blocks_in_stash[recurLev][i]->getID(),0);
 				char v3 = ocmp_eq(u, 0);
 				o_copyBlock(v2&v3, blocks_in_stash[recurLev][i], blocks_in_bucket[recurLev][j]);
-				o_memcpy_8(v2&v3, &meta_stash[i + start_stash_idx], &meta_path[j + start_block_idx], sizeof(TYPE_ID));
+				o_memcpy(v2&v3, &meta_stash[i + start_stash_idx], &meta_path[j + start_block_idx], sizeof(TYPE_ID));
 				o_clearBlock(v2&v3 , blocks_in_bucket[recurLev][j]);
 				u |= v2;
 				//if (blocks_in_stash[recurLev][i]->getID() == 0) //!? change to be oblivious comparison later
@@ -1108,12 +1102,12 @@ void ecall_readPathData_PORAM(unsigned char* serializedBlocks_in_bucket, int sta
 				//	*blocks_in_stash[recurLev][i] = *write_block[recurLev];
 					if (recurLev > 0)
 					{
-						o_memcpy_8(v4&t, &meta_stash[i + start_stash_idx], &new_path_id[recurLev], sizeof(TYPE_ID));
+						o_memcpy(v4&t, &meta_stash[i + start_stash_idx], &new_path_id[recurLev], sizeof(TYPE_ID));
 					//	meta_stash[i + start_stash_idx] = new_path_id[recurLev];
 					}
 					else
 					{
-						o_memcpy_8(v4&t, &meta_stash[i + start_stash_idx], &prevGen_newPathID, sizeof(TYPE_ID));
+						o_memcpy(v4&t, &meta_stash[i + start_stash_idx], &prevGen_newPathID, sizeof(TYPE_ID));
 						//meta_stash[i + start_stash_idx] = prevGen_newPathID;
 					}
 
@@ -1191,9 +1185,9 @@ void ecall_writePathData_PORAM(unsigned char* serializedBlocks_in_bucket, int st
 			char v3 = v & v2;
 			char v4 = ocmp_eq(u, 0);
 			o_copyBlock(v3&v4, blocks_in_bucket[recurLev][i], blocks_in_stash[recurLev][s]);
-			o_memcpy_8(v3&v4, &meta_path[start_block_idx - i], &meta_stash[s + start_stash_idx],sizeof(TYPE_ID));
+			o_memcpy(v3&v4, &meta_path[start_block_idx - i], &meta_stash[s + start_stash_idx],sizeof(TYPE_ID));
 			o_clearBlock(v3&v4, blocks_in_stash[recurLev][s]);
-			o_memcpy_8(v3&v4, &meta_stash[s + start_stash_idx], &_MINUS_ONE, sizeof(TYPE_ID));
+			o_memcpy(v3&v4, &meta_stash[s + start_stash_idx], &_MINUS_ONE, sizeof(TYPE_ID));
 			u |= v3;
 			//if (meta_stash[s + start_stash_idx] != -1)
 			//{
@@ -1255,7 +1249,7 @@ void ecall_readPathData_CORAM(unsigned char* serializedBlocks_in_bucket, int sta
 		v &= ocmp_ne(meta_path[j + start_block_idx],-1);
 		o_clearBlock(v, read_block[recurLevel]);
 		o_copyBlock(v, read_block[recurLevel], blocks_in_bucket[recurLevel][j]);
-		o_memcpy_8(v, &meta_path[j + start_block_idx], &_MINUS_ONE, sizeof(TYPE_ID));
+		o_memcpy(v, &meta_path[j + start_block_idx], &_MINUS_ONE, sizeof(TYPE_ID));
 
 		//if (blocks_in_bucket[recurLevel][j]->getID() == recursive_block_ids[recurLevel] && meta_path[j+ start_block_idx] != -1)
 		//{
@@ -1299,12 +1293,12 @@ void ecall_readStashData_CORAM(unsigned char* serializedBlocks_in_stash, int sta
 			//*blocks_in_stash[recurLev][i] = *write_block[recurLev];
 			if (recurLev > 0)
 			{
-				o_memcpy_8(v, &meta_stash[i + start_stash_idx], &new_path_id[recurLev],sizeof(TYPE_ID));
+				o_memcpy(v, &meta_stash[i + start_stash_idx], &new_path_id[recurLev],sizeof(TYPE_ID));
 				//meta_stash[i + start_stash_idx] = new_path_id[recurLev];
 			}
 			else
 			{
-				o_memcpy_8(v, &meta_stash[i + start_stash_idx], &prevGen_newPathID, sizeof(TYPE_ID));
+				o_memcpy(v, &meta_stash[i + start_stash_idx], &prevGen_newPathID, sizeof(TYPE_ID));
 				//meta_stash[i + start_stash_idx] = prevGen_newPathID;
 			}
 
@@ -1331,12 +1325,12 @@ void ecall_readStashData_CORAM(unsigned char* serializedBlocks_in_stash, int sta
 
 			if (recurLev > 0)
 			{
-				o_memcpy_8(v2, &meta_stash[i + start_stash_idx], &new_path_id[recurLev], sizeof(TYPE_ID));
+				o_memcpy(v2, &meta_stash[i + start_stash_idx], &new_path_id[recurLev], sizeof(TYPE_ID));
 				//meta_stash[i + start_stash_idx] = new_path_id[recurLev];
 			}
 			else
 			{
-				o_memcpy_8(v2, &meta_stash[i + start_stash_idx], &prevGen_newPathID, sizeof(TYPE_ID));
+				o_memcpy(v2, &meta_stash[i + start_stash_idx], &prevGen_newPathID, sizeof(TYPE_ID));
 				//meta_stash[i + start_stash_idx] = prevGen_newPathID;
 			}
 
@@ -1408,10 +1402,10 @@ void ecall_evictCORAM(unsigned char* blocks, int start_block_idx, int pathLev, O
 			char v = ocmp_eq(i + start_block_idx, deepestIdx[0]);
 			v &= ocmp_ne(target[0], -2);
 			o_copyBlock(v, read_block[recurLevel], blocks_in_stash[recurLevel][i]);
-			o_memcpy_8(v, &hold_pathID, &meta_stash[deepestIdx[0]], sizeof(TYPE_ID));
+			o_memcpy(v, &hold_pathID, &meta_stash[deepestIdx[0]], sizeof(TYPE_ID));
 			o_clearBlock(v, blocks_in_stash[recurLevel][i]);
-			o_memcpy_8(v, &meta_stash[deepestIdx[0]], &_MINUS_ONE, sizeof(TYPE_ID));
-			o_memcpy_8(v, &dest, &target[0], sizeof(int));
+			o_memcpy(v, &meta_stash[deepestIdx[0]], &_MINUS_ONE, sizeof(TYPE_ID));
+			o_memcpy(v, &dest, &target[0], sizeof(int));
 			//if (i + start_block_idx == deepestIdx[0] && target[0] != -2) // !? 
 			//{
 			//	*read_block[recurLevel] = *blocks_in_stash[recurLevel][i];
@@ -1430,10 +1424,10 @@ void ecall_evictCORAM(unsigned char* blocks, int start_block_idx, int pathLev, O
 		char v = ocmp_ne(read_block[recurLevel]->getID(), 0);
 		v &= ocmp_eq(pathLev, dest);
 		o_copyBlock(v, write_block[recurLevel], read_block[recurLevel]);
-		o_memcpy_8(v, &to_write_pathID, &hold_pathID, sizeof(TYPE_ID));
+		o_memcpy(v, &to_write_pathID, &hold_pathID, sizeof(TYPE_ID));
 		o_clearBlock(v, read_block[recurLevel]);
-		o_memcpy_8(v, &hold_pathID, &_MINUS_ONE, sizeof(TYPE_ID));
-		o_memcpy_8(v, &dest, &_MINUS_TWO, sizeof(int));
+		o_memcpy(v, &hold_pathID, &_MINUS_ONE, sizeof(TYPE_ID));
+		o_memcpy(v, &dest, &_MINUS_TWO, sizeof(int));
 
 		//if (read_block[recurLevel]->getID() != 0 && pathLev == dest)
 		//{
@@ -1449,10 +1443,10 @@ void ecall_evictCORAM(unsigned char* blocks, int start_block_idx, int pathLev, O
 			v2 &= ocmp_eq(i + start_block_idx, (deepestIdx[pathLev] + ((pathLev - 1)*BUCKET_SIZE)));
 			o_copyBlock(v2, read_block[recurLevel], blocks_in_bucket[recurLevel][i]);
 			TYPE_ID tmp = meta_path[deepestIdx[pathLev] + ((pathLev - 1)*BUCKET_SIZE)];
-			o_memcpy_8(v2,&hold_pathID, &tmp, sizeof(TYPE_ID));
+			o_memcpy(v2,&hold_pathID, &tmp, sizeof(TYPE_ID));
 			o_clearBlock(v2, blocks_in_bucket[recurLevel][i]);
-			o_memcpy_8(v2, &meta_path[deepestIdx[pathLev] + ((pathLev - 1)*BUCKET_SIZE)], &_MINUS_ONE, sizeof(TYPE_ID));
-			o_memcpy_8(v2, &dest, &target[pathLev], sizeof(int));
+			o_memcpy(v2, &meta_path[deepestIdx[pathLev] + ((pathLev - 1)*BUCKET_SIZE)], &_MINUS_ONE, sizeof(TYPE_ID));
+			o_memcpy(v2, &dest, &target[pathLev], sizeof(int));
 
 			//if ((target[pathLev] != -2) && ((i + start_block_idx) == (deepestIdx[pathLev] + ((pathLev - 1)*BUCKET_SIZE)))) //!?
 			//{
@@ -1468,8 +1462,8 @@ void ecall_evictCORAM(unsigned char* blocks, int start_block_idx, int pathLev, O
 			v3 &= ocmp_eq(meta_path[i + start_block_idx], -1);
 			o_copyBlock(v3, blocks_in_bucket[recurLevel][i], write_block[recurLevel]);
 			o_clearBlock(v3, write_block[recurLevel]);
-			o_memcpy_8(v3, &meta_path[i + start_block_idx], &to_write_pathID, sizeof(TYPE_ID));
-			o_memcpy_8(v3, &to_write_pathID, &_MINUS_ONE, sizeof(TYPE_ID));
+			o_memcpy(v3, &meta_path[i + start_block_idx], &to_write_pathID, sizeof(TYPE_ID));
+			o_memcpy(v3, &to_write_pathID, &_MINUS_ONE, sizeof(TYPE_ID));
 
 			//if (write_block[recurLevel]->getID() != 0 && meta_path[i + start_block_idx] == -1) 
 			//{
@@ -1521,29 +1515,34 @@ void ecall_getNextPathID(ORAM_INFO* oram_info, int recurLevel, TYPE_ID* pid)
 
 
 /* Search & update functions*/
-void ecall_setSearchKeyword(unsigned char* kw, int kw_len, int* kwmap_size, unsigned char* ctr_kwmap)
+void ecall_setSearchKeyword(unsigned char* kw, int kw_len, int kwmap_size, unsigned char* ctr_kwmap)
 {
 	sgx_rijndael128_cmac_msg(master_key, kw, kw_len, &tag);
 	memcpy(ctr_decrypt, ctr_kwmap, 16);
 	memcpy(ctr_reencrypt, ctr_kwmap, 16);
 	
-	inc_dec_ctr(ctr_reencrypt, ceil((double)*kwmap_size*KWMAP_VALUE_SIZE/ENCRYPT_BLOCK_SIZE), true);
-
+	int inc_val = ceil((double)(kwmap_size)*KWMAP_VALUE_SIZE / ENCRYPT_BLOCK_SIZE);
+	inc_dec_ctr(ctr_reencrypt, inc_val, true);
+	
 	randPath = RandBound(IDX_NUM_BLOCKS) + (IDX_NUM_BLOCKS - 1);
 	currOp = OP_SEARCH;
 	lst_fid.clear();
+	blockID_2 = 0;
+	pathID_2 = 0;
+	blockID = 0;
+	pathID = 0;
 }
 
-void ecall_setUpdateKeyword(unsigned char* kw, int kw_len, TYPE_ID fileID, int* kwmap_size, unsigned char* ctr_kwmap)
+void ecall_setUpdateKeyword(unsigned char* kw, int kw_len, TYPE_ID fileID, int kwmap_size, unsigned char* ctr_kwmap)
 {
 	sgx_rijndael128_cmac_msg(master_key, kw, kw_len, &tag);
 	memcpy(ctr_decrypt, ctr_kwmap, 16);
 	memcpy(ctr_reencrypt, ctr_kwmap, 16);
 
-	inc_dec_ctr(ctr_reencrypt, ceil((double)*kwmap_size*KWMAP_VALUE_SIZE / ENCRYPT_BLOCK_SIZE), true);
+	int inc_val = ceil((double)(kwmap_size)*KWMAP_VALUE_SIZE / ENCRYPT_BLOCK_SIZE);
+	inc_dec_ctr(ctr_reencrypt, inc_val, true);
 
 	randPath = RandBound(IDX_NUM_BLOCKS) + (IDX_NUM_BLOCKS - 1);
-
 
 	update_fileID = fileID;
 	currOp = OP_UPDATE;
@@ -1560,7 +1559,7 @@ void ecall_scanKWMap( unsigned char* input, int len)
 	{
 		// first 16 bytes are the cmac of keyword
 		char v = 1;
-		for (int j = 0; j < 16; j+=sizeof(long long))
+		for (int j = 0; j < 16; j+=8)
 		{
 			v &= ocmp_eq(*((long long*)&tag[j]),*((long long*) &input[i+j]));
 		}
@@ -1569,17 +1568,17 @@ void ecall_scanKWMap( unsigned char* input, int len)
 		// latter 32 bytes are the encrypted blockID, pathID, and number of fileIDs in the first block of keyword
 		sgx_aes_ctr_encrypt(master_key, &input[i+16], 32, ctr_decrypt, 128, buffer);
 
-		o_memcpy_8(v, &blockID, buffer, sizeof(blockID));
-		o_memcpy_8(v, &pathID, &buffer[8], sizeof(pathID));
-		o_memcpy_8(v, &buffer[8], &randPath, sizeof(randPath));
-		o_memcpy_8(v, &numFileIDs, &buffer[16], sizeof(numFileIDs));
-		if (v)
+		o_memcpy(v, &blockID, &buffer[0], sizeof(blockID));
+		o_memcpy(v, &pathID, &buffer[8], sizeof(pathID));
+		o_memcpy(v, &buffer[8], &randPath, sizeof(randPath));
+		o_memcpy(v, &numFileIDs, &buffer[16], sizeof(numFileIDs));
+		/*if (v)
 		{
 			ocall_print_value(blockID);
 			ocall_print_value(pathID);
 			ocall_print_value(numFileIDs);
 
-		}
+		}*/
 		//if (matched == 1)
 		//{
 			//memcpy(&blockID, buffer, 8);
@@ -1591,20 +1590,20 @@ void ecall_scanKWMap( unsigned char* input, int len)
 				char v2 = ocmp_eq(numFileIDs, INDEX_DATA_SIZE / sizeof(TYPE_ID));
 				v2 &= v;
 				useEmptyBlock = 0;
-				o_memcpy_8(v2, &buffer[0], &blockID_2, sizeof(TYPE_ID));
+				o_memcpy(v2, &buffer[0], &blockID_2, sizeof(blockID_2));
 				long long tmp = 0;
-				o_memcpy_8(v2, &numFileIDs, &tmp, sizeof(tmp));
+				o_memcpy(v2, &numFileIDs, &tmp, sizeof(tmp));
 				TYPE_ID tmp2;
-				o_memcpy_8(v2, &tmp2, &blockID, sizeof(blockID));
-				o_memcpy_8(v2, &blockID, &blockID_2, sizeof(blockID));
-				o_memcpy_8(v2, &blockID_2, &tmp2, sizeof(tmp2));
+				o_memcpy(v2, &tmp2, &blockID, sizeof(blockID));
+				o_memcpy(v2, &blockID, &blockID_2, sizeof(blockID));
+				o_memcpy(v2, &blockID_2, &tmp2, sizeof(tmp2));
 
-				o_memcpy_8(v2, &tmp2, &pathID, sizeof(pathID));
-				o_memcpy_8(v2, &pathID, &pathID_2, sizeof(pathID));
-				o_memcpy_8(v2, &pathID_2, &tmp2, sizeof(tmp2));
+				o_memcpy(v2, &tmp2, &pathID, sizeof(pathID));
+				o_memcpy(v2, &pathID, &pathID_2, sizeof(pathID));
+				o_memcpy(v2, &pathID_2, &tmp2, sizeof(tmp2));
 
 				char tmp3 = 1;
-				o_memcpy_byte(v2, &useEmptyBlock, &tmp3, sizeof(char));
+				o_memcpy(v2, &useEmptyBlock, &tmp3, sizeof(char));
 
 				//if (numFileIDs == INDEX_DATA_SIZE / sizeof(TYPE_ID)) // curBlock is full
 				//{
@@ -1629,15 +1628,15 @@ void ecall_scanKWMap( unsigned char* input, int len)
 					//no swap
 				//}
 				long long tmp4 = numFileIDs++;
-				o_memcpy_8(v2, &numFileIDs, &tmp4, sizeof(long long));
-				o_memcpy_8(v2, &buffer[16], &numFileIDs, 8);
+				o_memcpy(v2, &numFileIDs, &tmp4, sizeof(tmp4));
+				o_memcpy(v2, &buffer[16], &numFileIDs, sizeof(tmp4));
 
 				//numFileIDs++;
 				//memcpy(&buffer[16], &numFileIDs, 8);
 			}
 		//}
-		sgx_aes_ctr_encrypt(master_key, buffer, 32, ctr_reencrypt, 128, &input[i + 16]);
-
+		sgx_aes_ctr_encrypt(master_key, buffer, KWMAP_VALUE_SIZE, ctr_reencrypt, 128, &input[i + 16]);
+		//ocall_print_string((char*)ctr_reencrypt, 16);
 		
 	}
 }
@@ -1649,7 +1648,7 @@ void ecall_getNumFileIDs(int* numFile)
 	{
 		char v = ocmp_g(*iter_lst_fid, 0);
 		int tmp2 = tmp + 1;
-		o_memcpy_8(v, &tmp, &tmp2, sizeof(int));
+		o_memcpy(v, &tmp, &tmp2, sizeof(int));
 
 		//if (*iter_lst_fid > 0)
 		//	tmp++;
@@ -1666,8 +1665,8 @@ void ecall_getFileIDs(unsigned char* fid_arr) // put encryption prior to copy
 		
 		int tmp2 = i + 1;
 		TYPE_ID tmp3 = *iter_lst_fid;
-		o_memcpy_8(v, &fid_arr[i * sizeof(TYPE_ID)], &tmp3, sizeof(TYPE_ID));
-		o_memcpy_8(v, &i, &tmp2, sizeof(int));
+		o_memcpy(v, &fid_arr[i * sizeof(TYPE_ID)], &tmp3, sizeof(TYPE_ID));
+		o_memcpy(v, &i, &tmp2, sizeof(int));
 
 		//if (*iter_lst_fid > 0)
 		//{
@@ -1702,10 +1701,10 @@ void ecall_scanEmptyBlock(unsigned char* empty_block_arr, long empty_block_arr_l
 		char v = ocmp_ne(tmp1, 0);
 		v &= ocmp_eq(blockID_2, 0);
 		v &= ocmp_eq(pathID_2, 0);
-		o_memcpy_8(v, &blockID_2, &tmp1, sizeof(TYPE_ID));
-		o_memcpy_8(v, &pathID_2, &tmp2, sizeof(TYPE_ID));
-		o_memcpy_8(v, &empty_block_arr[i], &tmp, sizeof(TYPE_ID));
-		o_memcpy_8(v, &empty_block_arr[i + sizeof(TYPE_ID)], &tmp, sizeof(TYPE_ID));
+		o_memcpy(v, &blockID_2, &tmp1, sizeof(TYPE_ID));
+		o_memcpy(v, &pathID_2, &tmp2, sizeof(TYPE_ID));
+		o_memcpy(v, &empty_block_arr[i], &tmp, sizeof(TYPE_ID));
+		o_memcpy(v, &empty_block_arr[i + sizeof(TYPE_ID)], &tmp, sizeof(TYPE_ID));
 		//if (tmp1 != 0 && blockID_2 == 0 && pathID_2 == 0)
 		//{
 		//	blockID_2 = tmp1;
@@ -1736,7 +1735,7 @@ void ecall_scanEmptyBlock(unsigned char* empty_block_arr, long empty_block_arr_l
 /*
 constexpr auto _MEMCPY_BLOCK_SIZE = 8;
 
-size_t o_memcpy_8(uint64_t is_valid_copy, void *dst, void *src, size_t size) {
+size_t o_memcpy(uint64_t is_valid_copy, void *dst, void *src, size_t size) {
 
 	size_t n_blocks = size / _MEMCPY_BLOCK_SIZE;
 	size_t large_size = n_blocks * _MEMCPY_BLOCK_SIZE;
@@ -1772,14 +1771,14 @@ size_t o_memcpy_8(uint64_t is_valid_copy, void *dst, void *src, size_t size) {
 
 	if (small_size == 0) return copied;
 
-	return copied + o_memcpy_byte(is_valid_copy,
+	return copied + o_memcpy(is_valid_copy,
 		(void*)(i_dst + copied),
 		(void*)(i_src + copied),
 		small_size);
 }
 
 
-size_t o_memcpy_byte(uint64_t is_valid_copy, void *dst, void *src, size_t size) {
+size_t o_memcpy(uint64_t is_valid_copy, void *dst, void *src, size_t size) {
 	//assert(1!=1);
 	//while(1);
 	size_t n_blocks = size;

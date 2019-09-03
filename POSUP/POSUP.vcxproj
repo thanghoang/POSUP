@@ -126,7 +126,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../include;include;$(IncludePath)</IncludePath>
+    <IncludePath>include;../include/;$(IncludePath)</IncludePath>
     <LibraryPath>lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Simulation|Win32'">
@@ -159,13 +159,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include;$(SGXSDKInstallPath)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SGXSDKInstallPath)include;include;../include;include/tomcrypt/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>lib;$(SGXSDKInstallPath)\bin\$(Platform)\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>intel_aes32.lib;sgx_urts.lib;sgx_uae_service.lib;wsock32.lib;ws2_32.lib;Iphlpapi.lib;sgx_tservice.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tomcrypt86.lib;intel_aes86.lib;sgx_urts.lib;sgx_uae_service.lib;wsock32.lib;ws2_32.lib;Iphlpapi.lib;sgx_tservice.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Simulation|Win32'">
@@ -198,7 +198,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SGXSDKInstallPath)\bin\$(Platform)\Debug;lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tomcrypt.lib;intel_aes64.lib;sgx_urts.lib;sgx_uae_service.lib;wsock32.lib;ws2_32.lib;Iphlpapi.lib;sgx_tservice.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tomcrypt64.lib;intel_aes64.lib;sgx_urts.lib;sgx_uae_service.lib;wsock32.lib;ws2_32.lib;Iphlpapi.lib;sgx_tservice.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>

@@ -1376,24 +1376,26 @@ int POSUP::search(string keyword, int &num)
 	memcpy(ctr_reencrypt, ctr, 16);
 	inc_dec_ctr(ctr_reencrypt, ceil((double)kwmap_size*KWMAP_VALUE_SIZE / ENCRYPT_BLOCK_SIZE), true);
 	str_kwMap.assign((char*)ctr_reencrypt, 16);
-
 	
 	//convert to byte array
-	unsigned char* KWMap_byte_arr = new unsigned char[keywordBlockID.size()*48];
+	unsigned char* KWMap_byte_arr = new unsigned char[keywordBlockID.size()*(KWMAP_VALUE_SIZE+16)];
 	long j = 0;
 	for (int i = 0; i < keywordBlockID.size(); i++)
 	{
 		memcpy(&KWMap_byte_arr[j], keywordBlockID[i].first.c_str(), 16);
 		j += 16;
 		memcpy(&KWMap_byte_arr[j], keywordBlockID[i].second.c_str(), KWMAP_VALUE_SIZE);
-		j += 32;
+		j += KWMAP_VALUE_SIZE;
 	}
-	ecall_setSearchKeyword(recursion_info_index[0].eid, (unsigned char*)keyword.c_str(), keyword.size(),&kwmap_size, ctr);
+	ecall_setSearchKeyword(recursion_info_index[0].eid, (unsigned char*)keyword.c_str(), keyword.size(),kwmap_size, ctr);
 	
-	//for (int i = 0; i < 32* ; i+=)
-	//{
-		ecall_scanKWMap(recursion_info_index[0].eid, KWMap_byte_arr, keywordBlockID.size() * 48);
-
+	for (long long i = 0; i < keywordBlockID.size()* (16 + KWMAP_VALUE_SIZE); i += (NUM_KWMAP_ENTRIES_LOAD* (16 + KWMAP_VALUE_SIZE)))
+	{
+		if (i + (NUM_KWMAP_ENTRIES_LOAD* (16 + KWMAP_VALUE_SIZE)) > keywordBlockID.size()* (16 + KWMAP_VALUE_SIZE))
+			ecall_scanKWMap(recursion_info_index[0].eid, &KWMap_byte_arr[i], (keywordBlockID.size()*(16 + KWMAP_VALUE_SIZE)) - i);
+		else
+			ecall_scanKWMap(recursion_info_index[0].eid, &KWMap_byte_arr[i], (NUM_KWMAP_ENTRIES_LOAD* (16 + KWMAP_VALUE_SIZE)));
+	}
 	//}
 	j = 0;
 	for (int i = 0; i < keywordBlockID.size(); i++)
@@ -1481,7 +1483,7 @@ int POSUP::update(string keyword, TYPE_ID fileID)
 	inc_dec_ctr(ctr_reencrypt, ceil((double)kwmap_size*KWMAP_VALUE_SIZE / ENCRYPT_BLOCK_SIZE), true);
 	str_kwMap.assign((char*)ctr_reencrypt, 16);
 
-	ecall_setUpdateKeyword(recursion_info_index[0].eid, (unsigned char*)keyword.c_str(), keyword.size(), fileID, &kwmap_size, ctr);
+	ecall_setUpdateKeyword(recursion_info_index[0].eid, (unsigned char*)keyword.c_str(), keyword.size(), fileID, kwmap_size, ctr);
 	
 
 	readByte_array_from_file(empty_block_arr, empty_block_arr_len, filename_emptyIdxBlock, clientDataDir);
@@ -1540,6 +1542,7 @@ int POSUP::update(string keyword, TYPE_ID fileID)
 		clearStats();
 
 		unsigned char *fid_arr = new unsigned char[sizeof(TYPE_ID)];
+		
 		memcpy(fid_arr, &fileID, sizeof(TYPE_ID));
 		int len = 0;
 		

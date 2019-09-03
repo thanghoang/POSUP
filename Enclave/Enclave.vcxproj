@@ -96,8 +96,9 @@
     <GenerateManifest>false</GenerateManifest>
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(NoInherit)</LibraryPath>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <IncludePath>$(SGXSDKInstallPath)include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Simulation|Win32'">
     <GenerateManifest>false</GenerateManifest>
@@ -157,6 +158,7 @@
       <EntryPointSymbol />
       <NoEntryPoint>true</NoEntryPoint>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImageHasSafeExceptionHandlers />
     </Link>
     <PostBuildEvent>
       <Command>"$(SGXSDKInstallPath)bin\win32\release\sgx_sign.exe" sign -key "$(ProjectDir)Enclave_private.pem" -enclave "$(OutDir)Enclave.dll" -out "$(OutDir)Enclave.signed.dll" -config "$(ProjectDir)Enclave.config.xml"</Command>
