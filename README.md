@@ -105,5 +105,5 @@ If the code is found useful, we would be appreciated if our paper can be cited a
 ```
 
 # Further Information
-For any inquiries, bugs, and assistance on building and running the code, please contact Thang Hoang (hoangm@mail.usf.edu).
+For any inquiries, bugs, and assistance on building and running the code, please dont hesitate to contact me (hoangm@mail.usf.edu).
 
