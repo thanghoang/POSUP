@@ -50,7 +50,7 @@ typedef unsigned char UCHAR;
 
 
 #ifndef bool
-#define bool BOOL
+//#define bool BOOL
 #endif
 //test if the processor actually supports the above functions
 //executing one the functions below without processor support will cause UD fault

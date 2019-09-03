@@ -222,20 +222,19 @@ static sgx_status_t SGX_CDECL Enclave_sgx_thread_set_multiple_untrusted_events_o
 
 static const struct {
 	size_t nr_ocall;
-	void * func_addr[7];
+	void * table[7];
 } ocall_table_Enclave = {
 	7,
 	{
-		(void*)(uintptr_t)Enclave_ocall_print_string,
-		(void*)(uintptr_t)Enclave_ocall_print_value,
-		(void*)(uintptr_t)Enclave_sgx_oc_cpuidex,
-		(void*)(uintptr_t)Enclave_sgx_thread_wait_untrusted_event_ocall,
-		(void*)(uintptr_t)Enclave_sgx_thread_set_untrusted_event_ocall,
-		(void*)(uintptr_t)Enclave_sgx_thread_setwait_untrusted_events_ocall,
-		(void*)(uintptr_t)Enclave_sgx_thread_set_multiple_untrusted_events_ocall,
+		(void*)Enclave_ocall_print_string,
+		(void*)Enclave_ocall_print_value,
+		(void*)Enclave_sgx_oc_cpuidex,
+		(void*)Enclave_sgx_thread_wait_untrusted_event_ocall,
+		(void*)Enclave_sgx_thread_set_untrusted_event_ocall,
+		(void*)Enclave_sgx_thread_setwait_untrusted_events_ocall,
+		(void*)Enclave_sgx_thread_set_multiple_untrusted_events_ocall,
 	}
 };
-
 sgx_status_t ecall_prepareMemory(sgx_enclave_id_t eid, ORAM_INFO* oram_info)
 {
 	sgx_status_t status;

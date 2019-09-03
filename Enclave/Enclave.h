@@ -3,7 +3,6 @@
 #include "conf.h"
 #include <cstring>
 
-#include <intrin.h>
 
 #include "iaesni.h"
 #include <set>

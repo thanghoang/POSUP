@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 			//cin >> fID;
 			p->loadState();
 			str_keyword = "the";
-			fID = -1;
+			fID = -2;
 			p->update(str_keyword, fID);
 			p->saveState();
 			break;

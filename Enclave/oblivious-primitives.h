@@ -819,6 +819,21 @@ extern "C" {
 		return size;
 
 	}
+		size_t o_memcpy(uint32_t pred, void* dst, void* src, size_t size) {
+		size_t mult_size = (size >> 3) << 3;
+		size_t remaining_size = size & 7;
+		size_t copied = 0;
+		if (mult_size != 0) {
+			copied += o_memcpy_8(pred, dst, src, mult_size);
+		}
+
+		if (remaining_size) {
+			uint8_t* c_dst = (uint8_t*)dst;
+			uint8_t* c_src = (uint8_t*)src;
+			copied += o_memcpy_byte(pred, c_dst + mult_size, c_src + mult_size, remaining_size);
+		}
+		return copied;
+	}
 #endif
 
 

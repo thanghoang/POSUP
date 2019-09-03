@@ -9,6 +9,8 @@
 
 #include "conf.h"
 
+#include <stdlib.h> /* for size_t */
+
 #define SGX_CAST(type, item) ((type)(item))
 
 #ifdef __cplusplus
