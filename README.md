@@ -1,6 +1,6 @@
 # POSUP: Oblivious Search and Update Platform with SGX
 
-Basic implementation of POSUP platform appeard in PETS'19. The full paper can be downloaded from [here](https://www.degruyter.com/downloadpdf/j/popets.2019.2019.issue-1/popets-2019-0010/popets-2019-0010.pdf). This project is mainly built on MS Visual Studio, but it can operate on Linux environment as well. 
+Basic implementation of POSUP platform appeard in PETS'19. The full paper can be downloaded from [here](https://www.degruyter.com/downloadpdf/j/popets.2019.2019.issue-1/popets-2019-0010/popets-2019-0010.pdf). This project is mainly built on MS Visual Studio, but it can operate on Linux environment as well. Note that sinve VS does not support x64 inline assembler, the project should be built with x86 on VS. In Linux, it can operate on 64-bit environment. 
 
 
 # Prerequisites
