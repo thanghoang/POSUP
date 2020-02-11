@@ -4,11 +4,11 @@ Basic implementation of POSUP platform appeard in PETS'19. The full paper can be
 
 
 # Prerequisites
-1. Intel SGX (Linux version [here](https://github.com/intel/linux-sgx), Windows setup [here](https://downloadcenter.intel.com/download/28972/Intel-Software-Guard-Extensions-Intel-SGX-Driver-for-Windows-))
+1. Intel SGX ([Linux version](https://github.com/intel/linux-sgx), [Windows version](https://downloadcenter.intel.com/download/28972/Intel-Software-Guard-Extensions-Intel-SGX-Driver-for-Windows-))
 
 2. Intel AES-NI (Sample code was taken down from Intel website, though it can be found in ``ext/aes-ni`` folder)
 
-3. Libtomcrypt (download [here](https://github.com/libtom/libtomcrypt))
+3. [Libtomcrypt](https://github.com/libtom/libtomcrypt))
 
 # Configuration
 There are TWO main configuration files in POSUP, including ``include/conf.h`` and ``POSUP/my_config.h`` with important parameters as follows:
@@ -105,5 +105,5 @@ If the code is found useful, we would be appreciated if our paper can be cited a
 ```
 
 # Further Information
-For any inquiries, bugs, and assistance on building and running the code, please dont hesitate to contact me (hoangm@mail.usf.edu).
+For any inquiries, bugs, and assistance on building and running the code, please dont hesitate to contact me at  [hoangm@mail.usf.edu](mailto:hoangm@mail.usf.edu).
 
