@@ -86,11 +86,8 @@ The implementation is just for the proof of concept. There are several places in
 
 ## Citing
 
-If the code is found useful, we would be appreciated if our paper can be cited as follows.
 
-``Hoang, Thang, Muslum Ozgur Ozmen, Yeongjin Jang, and Attila A. Yavuz. "Hardware-Supported ORAM in Effect: Practical Oblivious Search and Update on Very Large Dataset." Proceedings on Privacy Enhancing Technologies 2019, no. 1 (2019): 172-191.``
-
-### Bibtex format
+If the code is found useful, we would be appreciated if our paper can be cited with the following bibtex format 
 ```
 @article{hoang2019hardware,
   title={Hardware-Supported ORAM in Effect: Practical Oblivious Search and Update on Very Large Dataset},
